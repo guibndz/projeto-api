@@ -1,0 +1,428 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Users API",
+		"description": "API para gerenciamento de usuários.",
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:8000",
+			"description": "Servidor local"
+		}
+	],
+	"tags": [
+		{
+			"name": "Users",
+			"description": "Operações de usuários"
+		}
+	],
+	"paths": {
+		"/api/users": {
+			"get": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Lista usuários",
+				"operationId": "listUsers",
+				"responses": {
+					"200": {
+						"description": "Lista de usuários retornada com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UsersResponse"
+								},
+								"examples": {
+									"success": {
+										"value": {
+											"users": [
+												{
+													"id": 1,
+													"name": "Ana",
+													"age": 25,
+													"email": "ana@example.com"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Cria usuário",
+				"operationId": "createUser",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCreateRequest"
+							},
+							"examples": {
+								"create": {
+									"value": {
+										"name": "João",
+										"age": 30,
+										"email": "joao@example.com"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Usuário criado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Erro de validação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								},
+								"examples": {
+									"invalidPayload": {
+										"value": {
+											"error": "Field name is required"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Atualiza usuário (completo)",
+				"description": "Requer o parâmetro de query id e os 3 campos no corpo.",
+				"operationId": "updateUserPut",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/UserIdQuery"
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserPutRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Usuário atualizado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								},
+								"examples": {
+									"notFound": {
+										"value": {
+											"error": "User not found"
+										}
+									}
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Erro de validação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Atualiza usuário (parcial)",
+				"description": "Requer o parâmetro de query id. Aceita 1 ou 2 campos entre name, age, email.",
+				"operationId": "updateUserPatch",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/UserIdQuery"
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserPatchRequest"
+							},
+							"examples": {
+								"patchName": {
+									"value": {
+										"name": "Maria"
+									}
+								},
+								"patchAgeEmail": {
+									"value": {
+										"age": 31,
+										"email": "maria@example.com"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Usuário atualizado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Erro de validação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								},
+								"examples": {
+									"tooManyFields": {
+										"value": {
+											"error": "PATCH accepts only 1 or 2 fields"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Users"
+				],
+				"summary": "Remove usuário",
+				"operationId": "deleteUser",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/UserIdQuery"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Usuário removido",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeleteResponse"
+								},
+								"examples": {
+									"success": {
+										"value": {
+											"message": "User deleted"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Erro de validação",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"UserIdQuery": {
+				"name": "id",
+				"in": "query",
+				"required": true,
+				"description": "ID do usuário (inteiro positivo)",
+				"schema": {
+					"type": "integer",
+					"minimum": 1
+				},
+				"example": 1
+			}
+		},
+		"schemas": {
+			"User": {
+				"type": "object",
+				"required": [
+					"id",
+					"name",
+					"age",
+					"email"
+				],
+				"properties": {
+					"id": {
+						"type": "integer",
+						"minimum": 1
+					},
+					"name": {
+						"type": "string",
+						"minLength": 1
+					},
+					"age": {
+						"type": "integer",
+						"minimum": 0
+					},
+					"email": {
+						"type": "string",
+						"format": "email"
+					}
+				}
+			},
+			"UsersResponse": {
+				"type": "object",
+				"required": [
+					"users"
+				],
+				"properties": {
+					"users": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/User"
+						}
+					}
+				}
+			},
+			"UserCreateRequest": {
+				"type": "object",
+				"required": [
+					"name",
+					"age",
+					"email"
+				],
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1
+					},
+					"age": {
+						"type": "integer",
+						"minimum": 0
+					},
+					"email": {
+						"type": "string",
+						"format": "email"
+					}
+				},
+				"additionalProperties": false
+			},
+			"UserPutRequest": {
+				"$ref": "#/components/schemas/UserCreateRequest"
+			},
+			"UserPatchRequest": {
+				"type": "object",
+				"description": "Aceita apenas 1 ou 2 campos entre name, age e email.",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1
+					},
+					"age": {
+						"type": "integer",
+						"minimum": 0
+					},
+					"email": {
+						"type": "string",
+						"format": "email"
+					}
+				},
+				"additionalProperties": false,
+				"minProperties": 1,
+				"maxProperties": 2
+			},
+			"DeleteResponse": {
+				"type": "object",
+				"required": [
+					"message"
+				],
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "User deleted"
+					}
+				}
+			},
+			"ErrorResponse": {
+				"type": "object",
+				"required": [
+					"error"
+				],
+				"properties": {
+					"error": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}
