@@ -1,4 +1,4 @@
-# Projeto API (PHP)
+# UserFlow API (PHP)
 
 API REST simples em **PHP** para gerenciamento de usuários, com persistência em arquivo JSON e documentação via OpenAPI.
 
@@ -146,7 +146,4 @@ Pelos controllers, a API utiliza respostas JSON com códigos HTTP, por exemplo:
 4. Push para a branch (`git push origin feature/minha-feature`)
 5. Abra um Pull Request
 
-## 📄 Licença
 
-Defina aqui a licença do projeto (ex.: MIT).  
-Caso ainda não exista, adicione um arquivo `LICENSE` no repositório.
